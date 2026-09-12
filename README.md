@@ -3,7 +3,7 @@
 **A three-view business intelligence system unifying marketing, sales and support data for a B2B SaaS revenue team. Built and deployed on AWS with Amazon QuickSight, with natural-language querying through Amazon Q.**
 
 <p align="center">
-  <img src="docs/previews/ch.png" width="90%" alt="Customer Health view">
+  <img src="docs/ch.png" width="90%" alt="Customer Health view">
 </p>
 
 <p align="center">
@@ -96,8 +96,8 @@ Three interaction layers connect them: a cross-sheet segment filter, a one-click
 
 <table>
 <tr>
-<td width="50%"><img src="docs/previews/mf.png" alt="Marketing Funnel"><br><sub><b>Marketing Funnel</b></sub></td>
-<td width="50%"><img src="docs/previews/sp.png" alt="Sales Pipeline"><br><sub><b>Sales Pipeline</b></sub></td>
+<td width="50%"><img src="docs/mf.png" alt="Marketing Funnel"><br><sub><b>Marketing Funnel</b></sub></td>
+<td width="50%"><img src="docs/sp.png" alt="Sales Pipeline"><br><sub><b>Sales Pipeline</b></sub></td>
 </tr>
 </table>
 
