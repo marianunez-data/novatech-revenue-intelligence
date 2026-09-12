@@ -1,7 +1,7 @@
 # NovaTech Revenue Intelligence Dashboard
 
 **A three-view business intelligence system unifying marketing, sales and support data for a B2B SaaS revenue team. Built and deployed on AWS with Amazon QuickSight, with natural-language querying through Amazon Q.**
-
+**[View the live dashboard →](https://marianunez-data.github.io/novatech-revenue-intelligence/)**
 <p align="center">
   <img src="docs/ch.png" width="90%" alt="Customer Health view">
 </p>
