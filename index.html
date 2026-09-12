@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NovaTech Revenue Intelligence Dashboard</title>
+<meta name="description" content="A three-view BI system unifying marketing, sales and support data, built in Amazon QuickSight with natural-language querying.">
+<style>
+:root{--navy:#14284b;--mag:#c0005e;--ink:#1a1a1a;--mut:#5f6773;--line:#e3e6ec;--bg:#fbfcfd;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:1060px;margin:0 auto;padding:0 24px;}
+a{color:var(--navy);}
+
+header{background:linear-gradient(160deg,#0e1d38 0%,#14284b 55%,#1d2f57 100%);color:#fff;padding:76px 0 64px;}
+header .wrap{max-width:900px;}
+h1{font-size:40px;line-height:1.15;font-weight:700;letter-spacing:-.8px;margin-bottom:18px;}
+.tagline{font-size:19px;line-height:1.55;color:#c3cde0;max-width:720px;}
+.chips{margin-top:30px;display:flex;flex-wrap:wrap;gap:8px;}
+.chip{font-size:12.5px;letter-spacing:.3px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#dde5f2;padding:5px 12px;border-radius:20px;}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.stat{background:#fff;padding:26px 20px;text-align:center;}
+.stat b{display:block;font-size:27px;color:var(--navy);font-weight:700;letter-spacing:-.5px;}
+.stat span{font-size:12.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.7px;}
+
+section{padding:60px 0;}
+section.alt{background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+h2{font-size:27px;color:var(--navy);letter-spacing:-.4px;margin-bottom:8px;}
+.sect-sub{color:var(--mut);margin-bottom:28px;font-size:16.5px;}
+h3{font-size:18px;color:var(--navy);margin-bottom:7px;}
+p{margin-bottom:14px;}
+p.lead{font-size:17.5px;color:#333;}
+
+.tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap;}
+.tab{cursor:pointer;border:1px solid var(--line);background:#fff;padding:10px 20px;border-radius:6px;font-size:14.5px;font-weight:600;color:var(--mut);transition:.15s;font-family:inherit;}
+.tab:hover{border-color:#b9c2d2;color:var(--navy);}
+.tab.on{background:var(--navy);border-color:var(--navy);color:#fff;}
+.pane{display:none;}
+.pane.on{display:block;animation:fade .25s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.shot{border:1px solid var(--line);border-radius:6px;overflow:hidden;box-shadow:0 2px 14px rgba(20,40,75,.07);background:#fff;cursor:zoom-in;}
+.shot img{width:100%;display:block;}
+.pane .cap{margin-top:12px;font-size:14.5px;color:var(--mut);}
+.pane .cap b{color:var(--navy);}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.card{background:#fff;border:1px solid var(--line);border-left:3px solid var(--mag);border-radius:5px;padding:20px 22px;}
+.card .fig{font-size:23px;font-weight:700;color:var(--navy);letter-spacing:-.5px;display:block;margin-bottom:4px;}
+.card p{font-size:14.8px;margin-bottom:9px;color:#3a4048;}
+.card p:last-child{margin-bottom:0;}
+.card .act{font-size:14px;color:var(--mut);border-top:1px solid var(--line);padding-top:9px;margin-top:11px;}
+.card .act b{color:var(--mag);}
+
+.note{background:#fff;border:1px solid var(--line);border-radius:5px;padding:19px 22px;margin-bottom:14px;}
+.note p{font-size:14.8px;margin-bottom:0;color:#3a4048;}
+
+.split{display:grid;grid-template-columns:1fr 1fr;gap:26px;}
+.split .box{background:#fff;border:1px solid var(--line);border-radius:5px;padding:22px;}
+.split .box.win{border-top:3px solid #1a7f37;}
+.split .box.loss{border-top:3px solid #a8620a;}
+.split h3{margin-bottom:10px;}
+.split li{font-size:14.8px;margin-bottom:9px;color:#3a4048;}
+.split ul{padding-left:19px;}
+
+.docs{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.doc{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:5px;padding:17px 19px;text-decoration:none;color:inherit;transition:.15s;}
+.doc:hover{border-color:var(--navy);box-shadow:0 3px 12px rgba(20,40,75,.09);transform:translateY(-1px);}
+.doc .ic{flex:0 0 34px;height:42px;background:var(--navy);border-radius:3px;color:#fff;font-size:9.5px;font-weight:700;display:flex;align-items:center;justify-content:center;letter-spacing:.4px;}
+.doc b{display:block;font-size:15px;color:var(--navy);margin-bottom:2px;}
+.doc span{font-size:13.3px;color:var(--mut);line-height:1.45;}
+
+footer{background:#0e1d38;color:#9fb0cc;padding:40px 0;font-size:14px;}
+footer b{color:#fff;}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+
+#lb{display:none;position:fixed;inset:0;background:rgba(8,15,30,.93);z-index:99;padding:28px;overflow:auto;cursor:zoom-out;}
+#lb img{display:block;margin:0 auto;max-width:1500px;width:100%;border-radius:4px;}
+
+@media(max-width:860px){
+ h1{font-size:30px}.stats{grid-template-columns:repeat(2,1fr)}
+ .grid2,.grid3,.split,.docs{grid-template-columns:1fr}
+ section{padding:44px 0}header{padding:52px 0 44px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>NovaTech Revenue Intelligence Dashboard</h1>
+    <p class="tagline">A three-view business intelligence system unifying marketing, sales and support data for a B2B SaaS revenue team, built in Amazon QuickSight with natural-language querying through Amazon Q.</p>
+    <p style="margin-top:22px"><a href="https://github.com/marianunez-data/novatech-revenue-intelligence" style="color:#fff;border:1px solid rgba(255,255,255,.35);padding:9px 18px;border-radius:5px;text-decoration:none;font-size:14.5px;font-weight:600;display:inline-block">View the repository and documentation &rarr;</a></p>
+    <div class="chips">
+      <span class="chip">Amazon QuickSight</span><span class="chip">SPICE</span>
+      <span class="chip">Amazon Q</span><span class="chip">Semantic Topic modelling</span>
+      <span class="chip">Multi-source joins</span><span class="chip">pandas</span>
+    </div>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="stat"><b>6,000+</b><span>records unified</span></div>
+  <div class="stat"><b>3</b><span>sources joined</span></div>
+  <div class="stat"><b>7</b><span>findings delivered</span></div>
+  <div class="stat"><b>9</b><span>AI queries validated</span></div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2>The problem</h2>
+    <p class="lead">A revenue team was working across three disconnected systems. Marketing knew which campaigns generated leads. Sales knew which deals closed. Support knew which customers were unhappy. Nobody could connect them, so nobody could see that the account generating the most support tickets was also the account generating the most revenue.</p>
+    <p>The brief was specific: one place the whole revenue team can go instead of three, with filters that work across pages, drill-down into any chart, and account-level linking so the same customer can be followed from campaign to deal to support ticket.</p>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <h2>The dashboard</h2>
+    <p class="sect-sub">Three views, connected by a cross-sheet segment filter, a one-click filter action, and a parameter-driven navigation action. Click any image to enlarge.</p>
+    <div class="tabs">
+      <button class="tab on" data-p="p1">Marketing Funnel</button>
+      <button class="tab" data-p="p2">Sales Pipeline</button>
+      <button class="tab" data-p="p3">Customer Health</button>
+    </div>
+    <div class="pane on" id="p1">
+      <div class="shot"><img src="previews/mf.png" alt="Marketing Funnel view"></div>
+      <p class="cap"><b>Marketing Funnel.</b> Channel performance, lead-to-deal conversion, campaign return and response rates across six campaigns and 2,240 leads. The conversion-by-channel chart is what surfaced that the best-converting channels receive the least volume.</p>
+    </div>
+    <div class="pane" id="p2">
+      <div class="shot"><img src="previews/sp.png" alt="Sales Pipeline view"></div>
+      <p class="cap"><b>Sales Pipeline.</b> Deal outcomes and loss reasons, revenue by segment and product, win rates by region, rep and product, days to close and average deal value across 499 opportunities. Pairing win rate against revenue per won deal is what exposed the scorecard problem.</p>
+    </div>
+    <div class="pane" id="p3">
+      <div class="shot"><img src="previews/ch.png" alt="Customer Health view"></div>
+      <p class="cap"><b>Customer Health.</b> The view nobody had before. Ticket volume by account, resolution time by priority, product areas driving load, sentiment, and an at-risk list that recomputes itself as data refreshes, built on the joined dataset.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Findings that changed a decision</h2>
+    <p class="sect-sub">Each was verified twice, once against the dashboard and once through an independent natural-language query.</p>
+    <div class="grid2">
+      <div class="card">
+        <span class="fig">-90.3%</span>
+        <h3>Every campaign returns less than it costs</h3>
+        <p>$12.36M spent against $1.13M attributed, across all six campaigns.</p>
+        <p class="act"><b>Recommendation:</b> do <i>not</i> cut budget. A shortfall that uniform across six independently run campaigns points at one attribution problem rather than six separate failures. Audit attribution first.</p>
+      </div>
+      <div class="card">
+        <span class="fig">69.9% vs 58.8%</span>
+        <h3>A high win rate was concealing small deals</h3>
+        <p>Central wins 69.9% of deals at $1,905 each. West wins 58.8% at $2,559.</p>
+        <p class="act"><b>Recommendation:</b> the regional scorecard rewarded the behaviour producing less revenue. Add revenue per won deal to the target.</p>
+      </div>
+      <div class="card">
+        <span class="fig">56.6h vs 59.4h</span>
+        <h3>Priority had no operational meaning</h3>
+        <p>Critical tickets resolve in 56.6 hours, low-priority in 59.4. Fourteen security incidents and eleven data-loss tickets wait as long as routine requests.</p>
+        <p class="act"><b>Recommendation:</b> define priority-based service levels, starting at eight hours for critical.</p>
+      </div>
+      <div class="card">
+        <span class="fig">8 accounts</span>
+        <h3>Customers churning quietly</h3>
+        <p>Combining above-median ticket volume, 25%+ negative sentiment and above-median revenue surfaced eight accounts nobody tracked. The top account by revenue also files 334 tickets, double the next.</p>
+        <p class="act"><b>Recommendation:</b> standing quarterly executive review; the list refreshes itself.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <h2>Engineering notes</h2>
+    <p class="sect-sub">The parts that were not obvious.</p>
+    <div class="note"><p><b>The join fans out, and that is correct.</b> Anchoring on 499 deals and left-joining 2,240 leads and 3,000 tickets on <code>account_id</code> produces 63,420 rows. Row multiplication is a legitimate consequence of the join, not a defect to clean away. It is handled at the analysis layer with distinct counts and level-aware aggregation so every deal, lead and ticket is counted once, then reconciled against the raw files.</p></div>
+    <div class="note"><p><b>Cross-dataset filters only auto-map on identical field names.</b> QuickSight matches fields by name and offers no manual field-to-field mapping, despite a dialog implying otherwise. Filtering segment across three datasets calling it <code>company_size_tier</code>, <code>customer_segment</code> and <code>customer_tier</code> required adding a calculated column with one identical name to each dataset, then rebuilding the filter so the scan re-matched.</p></div>
+    <div class="note"><p><b>A parameter control is not a filter.</b> Carrying an account between sheets needs three separate objects: a parameter, a control that sets it, and a filter bound to it. The control alone changes a value and filters nothing, a silent failure where everything looks wired and nothing moves.</p></div>
+    <div class="note"><p><b>Two defects found during verification changed the build.</b> Opportunity identifiers are reused across three account pairs, so they are not a safe unique key. And the support system records three customer size tiers while the CRM records four, so the same customer carries different size labels depending on which system is asked.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What the AI got right, and what it got wrong</h2>
+    <p class="sect-sub">Nine questions tested against Amazon Q twice, before and after configuring a semantic Topic. The results were not uniformly positive, which is the more useful outcome.</p>
+    <div class="split">
+      <div class="box win">
+        <h3>Configuration fixed real errors</h3>
+        <ul>
+          <li>Asked for average deal size, Q first averaged all 499 deals and returned <b>$1,589</b> for Enterprise. The dashboard reports <b>$2,515</b>, counting only won deals. Neither was arithmetically wrong, they described different populations, the hardest class of error to notice. A written instruction resolved it.</li>
+          <li>Q stopped resolving "campaign source" to a country-code field and began using the marketing channel.</li>
+          <li>It corrected a <b>$1.16M</b> arithmetic error it had made in its own written summary, where the prose understated the table it had just produced.</li>
+        </ul>
+      </div>
+      <div class="box loss">
+        <h3>Configuration also caused a regression</h3>
+        <ul>
+          <li>Both questions requiring two sources joined on account were answered correctly <b>before</b> the Topic and only partly afterwards. The Topic is scoped to the three source datasets and excludes the pre-joined view, so Q lost the bridge between tickets and deals.</li>
+          <li>Semantic accuracy on single-source questions was bought at the cost of cross-source reach. The trade-off is documented rather than hidden.</li>
+          <li>"Conversion rate" remains genuinely ambiguous. It is not a field anywhere in the data, so no synonym fixes it. It needs a business decision.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <h2>Documentation</h2>
+    <p class="sect-sub">Full working papers, each with screenshot evidence.</p>
+    <div class="docs">
+      <a class="doc" href="https://github.com/marianunez-data/novatech-revenue-intelligence/blob/main/04_reports/Executive_Summary.pdf" target="_blank" rel="noopener"><span class="ic">PDF</span><span><b>Executive Summary</b><span>Six findings with observation, meaning and recommended action, plus confidence levels and emerging risks.</span></span></a>
+      <a class="doc" href="https://github.com/marianunez-data/novatech-revenue-intelligence/blob/main/04_reports/Report_for_VP_Sarah_Chen.pdf" target="_blank" rel="noopener"><span class="ic">PDF</span><span><b>Stakeholder Report</b><span>Non-technical report covering data strategy, design rationale and where AI agreed or disagreed with the dashboard.</span></span></a>
+      <a class="doc" href="https://github.com/marianunez-data/novatech-revenue-intelligence/blob/main/01_data_preparation/Data_Preparation_Report.pdf" target="_blank" rel="noopener"><span class="ic">PDF</span><span><b>Data Preparation</b><span>Profiling, type corrections, eleven calculated fields and the join design, with evidence at each step.</span></span></a>
+      <a class="doc" href="https://github.com/marianunez-data/novatech-revenue-intelligence/blob/main/03_ai_analysis/Q_Exploration_Log.pdf" target="_blank" rel="noopener"><span class="ic">PDF</span><span><b>AI Query Log</b><span>Nine questions, before and after Topic configuration, with paired screenshots and dashboard cross-checks.</span></span></a>
+      <a class="doc" href="https://github.com/marianunez-data/novatech-revenue-intelligence/blob/main/01_data_preparation/Verification_Log.pdf" target="_blank" rel="noopener"><span class="ic">PDF</span><span><b>Verification Log</b><span>Eight data quality checks across all three sources against the supplied data dictionary.</span></span></a>
+      <a class="doc" href="https://github.com/marianunez-data/novatech-revenue-intelligence/blob/main/02_dashboard/4_Account_Linking_Evidence.pdf" target="_blank" rel="noopener"><span class="ic">PDF</span><span><b>Account Linking Evidence</b><span>One account traced across all three views, every figure reconciled, showing the cross-sheet filter and navigation action working.</span></span></a>
+      <a class="doc" href="https://github.com/marianunez-data/novatech-revenue-intelligence/tree/main/02_dashboard" target="_blank" rel="noopener"><span class="ic">PDF</span><span><b>Dashboard Exports</b><span>Full-resolution exports of all three views as published.</span></span></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>Built by <b>María Camila Gonzalez Nuñez</b></div>
+    <div>NovaTech is a fictional company; the datasets are synthetic. All figures independently verified against source files.</div>
+  </div>
+</footer>
+
+<div id="lb"><img src="" alt=""></div>
+
+<script>
+document.querySelectorAll('.tab').forEach(function(t){
+  t.addEventListener('click', function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on');});
+    document.querySelectorAll('.pane').forEach(function(x){x.classList.remove('on');});
+    t.classList.add('on');
+    document.getElementById(t.dataset.p).classList.add('on');
+  });
+});
+var lb = document.getElementById('lb');
+document.querySelectorAll('.shot img').forEach(function(img){
+  img.parentElement.addEventListener('click', function(){
+    lb.querySelector('img').src = img.src;
+    lb.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  });
+});
+lb.addEventListener('click', function(){
+  lb.style.display = 'none';
+  document.body.style.overflow = '';
+});
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape' && lb.style.display === 'block'){
+    lb.style.display = 'none'; document.body.style.overflow = '';
+  }
+});
+</script>
+</body>
+</html>
